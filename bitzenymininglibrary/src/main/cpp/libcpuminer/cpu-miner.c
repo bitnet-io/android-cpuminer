@@ -103,6 +103,7 @@ struct workio_cmd {
 enum algos {
 	ALGO_YESCRYPT,
 	ALGO_YESPOWER,
+	ALGO_AURUM,
 	ALGO_SCRYPT,		/* scrypt(1024,1,1) */
 	ALGO_SHA256D,		/* SHA-256d */
 };
@@ -111,6 +112,7 @@ static const char *algo_names[] = {
 	[ALGO_YESCRYPT]		= "yescrypt",
 	[ALGO_YESPOWER]		= "yespower",
 	[ALGO_SCRYPT]		= "scrypt",
+	[ALGO_AURUM]		= "aurum",
 	[ALGO_SHA256D]		= "sha256d",
 };
 
@@ -173,6 +175,7 @@ static char const usage[] = "\
 Usage: " PROGRAM_NAME " [OPTIONS]\n\
 Options:\n\
   -a, --algo=ALGO       specify the algorithm to use\n\
+                          aurum     BITNET\n\
                           yescrypt  yescrypt (default)\n\
                           yespower  yespower 0.5\n\
                           scrypt    scrypt(1024, 1, 1)\n\
@@ -1103,7 +1106,7 @@ static void stratum_gen_work(struct stratum_ctx *sctx, struct work *work)
 		free(xnonce2str);
 	}
 
-	if (opt_algo == ALGO_SCRYPT || opt_algo == ALGO_YESCRYPT || opt_algo == ALGO_YESPOWER)
+	if (opt_algo == ALGO_SCRYPT || opt_algo == ALGO_YESCRYPT || opt_algo == ALGO_YESPOWER || ALGO_AURUM)
 		diff_to_target(work->target, sctx->job.diff / 65536.0);
 	else
 		diff_to_target(work->target, sctx->job.diff);
@@ -1200,6 +1203,9 @@ static void *miner_thread(void *userdata)
                         case ALGO_YESCRYPT:
 				max64 = 0x000fff;
 				break;
+                        case ALGO_AURUM:
+				max64 = 0x000fff;
+				break;
                         case ALGO_YESPOWER:
 				max64 = 0x000fff;
 				break;
@@ -1223,6 +1229,11 @@ static void *miner_thread(void *userdata)
 		switch (opt_algo) {
 		case ALGO_YESCRYPT:
 			rc = scanhash_yescrypt(thr_id, work.data, work.target,
+					       max_nonce, &hashes_done);
+			break;
+
+		case ALGO_AURUM:
+			rc = scanhash_aurum(thr_id, work.data, work.target,
 					       max_nonce, &hashes_done);
 			break;
 

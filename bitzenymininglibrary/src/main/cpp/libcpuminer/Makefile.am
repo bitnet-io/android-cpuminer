@@ -16,7 +16,9 @@ dist_man_MANS	= minerd.1
 minerd_SOURCES	= elist.h miner.h compat.h \
 		  cpu-miner.c util.c \
 		  sha2.c scrypt.c yescrypt.c \
-      yespower/yespower.c yespower/sha256.c
+      yespower/yespower.c yespower/sha256.c algo/aurum/aurum.c
+
+
 
 if USE_ASM
 if ARCH_x86
@@ -32,6 +34,7 @@ if ARCH_PPC
 minerd_SOURCES += sha2-ppc.S scrypt-ppc.S
 endif
 endif
+
 minerd_LDFLAGS	= $(PTHREAD_FLAGS)
 minerd_LDADD	= @LIBCURL@ @JANSSON_LIBS@ @PTHREAD_LIBS@ @WS2_LIBS@
 minerd_CFLAGS	= -fno-strict-aliasing

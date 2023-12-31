@@ -1,0 +1,2 @@
+ninja: Entering directory `/home/c4pt/opt/yenten-android-miner/bitzenymininglibrary/.cxx/cmake/standardRelease/arm64-v8a'
+ninja: no work to do.

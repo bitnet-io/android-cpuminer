@@ -104,6 +104,7 @@ struct workio_cmd {
 
 enum algos {
 	ALGO_YESCRYPT,
+	ALGO_AURUM,
 	ALGO_YESPOWER,
 	ALGO_SCRYPT,		/* scrypt(1024,1,1) */
 	ALGO_SHA256D,		/* SHA-256d */
@@ -113,6 +114,7 @@ static const char *algo_names[] = {
 	[ALGO_YESCRYPT]		= "yescrypt",
 	[ALGO_YESPOWER]		= "yespower",
 	[ALGO_SCRYPT]		= "scrypt",
+	[ALGO_AURUM]		= "aurum",
 	[ALGO_SHA256D]		= "sha256d",
 };
 
@@ -581,8 +583,8 @@ static void share_result(int result, const char *reason)
 	result ? accepted_count++ : rejected_count++;
 	pthread_mutex_unlock(&stats_lock);
 	
-	sprintf(s, hashrate >= 1e3 ? "%.0f" : "%.1f", hashrate);
-	applog(LOG_INFO, "accepted: %lu/%lu (%.2f%%), %s hash/s %s",
+	sprintf(s, hashrate >= 1e6 ? "%.0f" : "%.2f", 1e-3 * hashrate);
+	applog(LOG_INFO, "accepted: %lu/%lu (%.2f%%), %s khash/s %s",
 		   accepted_count,
 		   accepted_count + rejected_count,
 		   100. * accepted_count / (accepted_count + rejected_count),
@@ -1107,6 +1109,9 @@ static void *miner_thread(void *userdata)
 			case ALGO_YESCRYPT:
 				max64 = 0x000fff;
 				break;
+			case ALGO_AURUM:
+				max64 = 0x000fff;
+				break;
 			case ALGO_YESPOWER:
 				max64 = 0x000fff;
 				break;
@@ -1129,6 +1134,11 @@ static void *miner_thread(void *userdata)
 		/* scan nonces for a proof-of-work hash */
 		switch (opt_algo) {
 		case ALGO_YESCRYPT:
+			rc = scanhash_yescrypt(thr_id, work.data, work.target,
+					       max_nonce, &hashes_done);
+			break;
+
+		case ALGO_AURUM:
 			rc = scanhash_yescrypt(thr_id, work.data, work.target,
 					       max_nonce, &hashes_done);
 			break;
@@ -1163,10 +1173,10 @@ static void *miner_thread(void *userdata)
 			pthread_mutex_unlock(&stats_lock);
 		}
 		if (!opt_quiet) {
-			sprintf(s, thr_hashrates[thr_id] >= 1e3 ? "%.0f" : "%.1f",
-				thr_hashrates[thr_id]);
-			applog(LOG_INFO, "thread %d: %lu hashes, %s hash/s",
-				thr_id, hashes_done, s);
+			sprintf(s, thr_hashrates[thr_id] >= 1e6 ? "%.0f" : "%.2f",
+					1e-3 * thr_hashrates[thr_id]);
+			applog(LOG_INFO, "thread %d: %lu hashes, %s khash/s",
+				   thr_id, hashes_done, s);
 		}
 		if (opt_benchmark && thr_id == opt_n_threads - 1) {
 			double hashrate = 0.;
