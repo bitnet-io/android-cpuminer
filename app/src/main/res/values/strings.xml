@@ -1,3 +1,6 @@
 <resources>
-    <string name="app_name">BitZenyMiner</string>
+    <string name="app_name">BitnetAndroidMiner</string>
+    <string-array name="algorithms">
+        <item>aurum</item>
+    </string-array>
 </resources>

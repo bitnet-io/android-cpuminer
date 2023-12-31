@@ -1,6 +1,7 @@
 package com.example.ottylab.bitzenyminer;
 
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
@@ -9,9 +10,12 @@ import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.example.ottylab.bitzenymininglibrary.BitZenyMiningLibrary;
@@ -32,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
     private EditText editTextNThreads;
     private Button buttonDrive;
     private CheckBox checkBoxBenchmark;
+    private Spinner spinnerAlgorithm;
     private TextView textViewLog;
 
     private boolean running;
@@ -48,8 +53,10 @@ public class MainActivity extends AppCompatActivity {
         public void handleMessage(Message msg) {
             MainActivity activity = this.activity.get();
             if (activity != null) {
-                String logs = Utils.rotateStringQueue(activity.logs, msg.getData().getString("log"));
+                String log = msg.getData().getString("log");
+                String logs = Utils.rotateStringQueue(activity.logs, log);
                 activity.textViewLog.setText(logs);
+                Log.d(TAG, log);
             }
         }
     }
@@ -60,6 +67,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        showDeviceInfo();
 
         sHandler = new JNICallbackHandler(this);
         miner = new BitZenyMiningLibrary(sHandler);
@@ -101,23 +110,27 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (running) {
-                    Log.d("Java", "stop");
+                    Log.d(TAG, "Stop");
                     miner.stopMining();
                 } else {
-                    Log.d("Java", "start");
+                    Log.d(TAG, "Start");
                     int n_threads = 0;
                     try {
                         n_threads = Integer.parseInt(editTextNThreads.getText().toString());
                     } catch (NumberFormatException e){}
 
+                    BitZenyMiningLibrary.Algorithm algorithm =
+                            spinnerAlgorithm.getSelectedItemPosition() == 0 ?
+                                    BitZenyMiningLibrary.Algorithm.YESCRYPT : BitZenyMiningLibrary.Algorithm.YESPOWER;
                     if (checkBoxBenchmark.isChecked()) {
-                        miner.startBenchmark(n_threads);
+                        miner.startBenchmark(n_threads, algorithm);
                     } else {
                         miner.startMining(
                             editTextServer.getText().toString(),
                             editTextUser.getText().toString(),
                             editTextPassword.getText().toString(),
-                            n_threads);
+                            n_threads,
+                            algorithm);
                     }
                 }
 
@@ -127,6 +140,10 @@ public class MainActivity extends AppCompatActivity {
         });
 
         checkBoxBenchmark = (CheckBox) findViewById(R.id.checkBoxBenchmark);
+        spinnerAlgorithm = (Spinner) findViewById(R.id.spinnerAlgorithm);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.algorithms, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerAlgorithm.setAdapter(adapter);
 
         textViewLog = (TextView) findViewById(R.id.textViewLog);
         textViewLog.setMovementMethod(new ScrollingMovementMethod());
@@ -146,6 +163,7 @@ public class MainActivity extends AppCompatActivity {
         editTextUser.setEnabled(!running);
         editTextPassword.setEnabled(!running);
         editTextNThreads.setEnabled(!running);
+        spinnerAlgorithm.setEnabled(!running);
     }
 
     private void storeSetting() {
@@ -155,6 +173,7 @@ public class MainActivity extends AppCompatActivity {
         editor.putString("user", editTextUser.getText().toString());
         editor.putString("password", editTextPassword.getText().toString());
         editor.putString("n_threads", editTextNThreads.getText().toString());
+        editor.putInt("algorithm", spinnerAlgorithm.getSelectedItemPosition());
         editor.commit();
     }
 
@@ -164,5 +183,18 @@ public class MainActivity extends AppCompatActivity {
         editTextUser.setText(pref.getString("user", null));
         editTextPassword.setText(pref.getString("password", null));
         editTextNThreads.setText(pref.getString("n_threads", null));
+        spinnerAlgorithm.setSelection(pref.getInt("algorithm", 0));
+    }
+
+    private void showDeviceInfo() {
+        String[] keys = new String[]{ "os.arch", "os.name", "os.version" };
+        for (String key : keys) {
+            Log.d(TAG, key + ": " + System.getProperty(key));
+        }
+        Log.d(TAG, "CODE NAME: " + Build.VERSION.CODENAME);
+        Log.d(TAG, "SDK INT: " + Build.VERSION.SDK_INT);
+        Log.d(TAG, "MANUFACTURER: " + Build.MANUFACTURER);
+        Log.d(TAG, "MODEL: " + Build.MODEL);
+        Log.d(TAG, "PRODUCT: " + Build.PRODUCT);
     }
 }

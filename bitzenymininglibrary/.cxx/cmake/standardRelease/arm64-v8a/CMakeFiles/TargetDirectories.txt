@@ -1,0 +1,6 @@
+/home/c4pt/opt/yenten-android-miner/bitzenymininglibrary/.cxx/cmake/standardRelease/arm64-v8a/CMakeFiles/rebuild_cache.dir
+/home/c4pt/opt/yenten-android-miner/bitzenymininglibrary/.cxx/cmake/standardRelease/arm64-v8a/CMakeFiles/edit_cache.dir
+/home/c4pt/opt/yenten-android-miner/bitzenymininglibrary/.cxx/cmake/standardRelease/arm64-v8a/CMakeFiles/bitzenymininglibrary.dir
+/home/c4pt/opt/yenten-android-miner/bitzenymininglibrary/.cxx/cmake/standardRelease/arm64-v8a/src/main/cpp/libcpuminer/CMakeFiles/rebuild_cache.dir
+/home/c4pt/opt/yenten-android-miner/bitzenymininglibrary/.cxx/cmake/standardRelease/arm64-v8a/src/main/cpp/libcpuminer/CMakeFiles/edit_cache.dir
+/home/c4pt/opt/yenten-android-miner/bitzenymininglibrary/.cxx/cmake/standardRelease/arm64-v8a/src/main/cpp/libcpuminer/CMakeFiles/cpuminer.dir

@@ -1,0 +1,7 @@
+Executable : /home/c4pt/Android/cmake/3.10.2.4988404/bin/ninja
+arguments : 
+-C
+/home/c4pt/opt/yenten-android-miner/bitzenymininglibrary/.cxx/cmake/standardRelease/x86_64
+bitzenymininglibrary
+jvmArgs : 
+
