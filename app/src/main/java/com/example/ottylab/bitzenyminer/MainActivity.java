@@ -121,7 +121,7 @@ public class MainActivity extends AppCompatActivity {
 
                     BitZenyMiningLibrary.Algorithm algorithm =
                             spinnerAlgorithm.getSelectedItemPosition() == 0 ?
-                                    BitZenyMiningLibrary.Algorithm.YESCRYPT : BitZenyMiningLibrary.Algorithm.YESPOWER;
+                                    BitZenyMiningLibrary.Algorithm.AURUM : BitZenyMiningLibrary.Algorithm.AURUM;
                     if (checkBoxBenchmark.isChecked()) {
                         miner.startBenchmark(n_threads, algorithm);
                     } else {

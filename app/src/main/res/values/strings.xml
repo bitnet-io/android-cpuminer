@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">BitnetAndroidMiner</string>
+    <string name="app_name">Bitnet Android Miner</string>
     <string-array name="algorithms">
         <item>aurum</item>
     </string-array>

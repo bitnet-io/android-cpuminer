@@ -12,8 +12,7 @@ public class BitZenyMiningLibrary {
     }
 
     public enum Algorithm {
-        YESCRYPT,
-        YESPOWER,
+        AURUM
     }
 
     private static Handler sHandler;
@@ -24,10 +23,8 @@ public class BitZenyMiningLibrary {
     }
     public int startMining(String url, String user, String password, int n_threads, Algorithm algo) {
         switch (algo) {
-            case YESCRYPT:
+            case AURUM:
                 return startMining(url, user, password, n_threads, 0);
-            case YESPOWER:
-                return startMining(url, user, password, n_threads, 1);
             default:
                 return -1;
         }
@@ -35,10 +32,8 @@ public class BitZenyMiningLibrary {
 
     public int startBenchmark(int n_threads, Algorithm algo) {
         switch (algo) {
-            case YESCRYPT:
+            case AURUM:
                 return startBenchmark(n_threads, 0);
-            case YESPOWER:
-                return startBenchmark(n_threads, 1);
             default:
                 return -1;
         }
