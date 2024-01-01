@@ -1,7 +1,10 @@
 
-# yenten-android-miner
+# requires java11 and android SDK
 
-Android Yenten Miner for yespowerr16 algo. Android studio cpuminer
+
+# bitnet android miner
+
+Android Bitnet Miner for yespowerr16 algo. Android studio cpuminer
 
 
 ## Environment

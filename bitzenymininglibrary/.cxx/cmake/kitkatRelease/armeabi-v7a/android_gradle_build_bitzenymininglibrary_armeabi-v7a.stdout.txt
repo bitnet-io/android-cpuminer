@@ -1,2 +1,0 @@
-ninja: Entering directory `/home/c4pt/opt/yenten-android-miner/bitzenymininglibrary/.cxx/cmake/kitkatRelease/armeabi-v7a'
-ninja: no work to do.

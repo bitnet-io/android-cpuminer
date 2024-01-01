@@ -1,1 +1,0 @@
-ninja: error: '../../../../../distribution/curl/lib19/arm64-v8a/libcurl.a', needed by '../../../../build/intermediates/cmake/kitkatRelease/obj/arm64-v8a/libbitzenymininglibrary.so', missing and no known rule to make it
