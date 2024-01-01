@@ -101,16 +101,12 @@ struct workio_cmd {
 };
 
 enum algos {
-	ALGO_YESCRYPT,
-	ALGO_YESPOWER,
 	ALGO_AURUM,
 	ALGO_SCRYPT,		/* scrypt(1024,1,1) */
 	ALGO_SHA256D,		/* SHA-256d */
 };
 
 static const char *algo_names[] = {
-	[ALGO_YESCRYPT]		= "yescrypt",
-	[ALGO_YESPOWER]		= "yespower",
 	[ALGO_SCRYPT]		= "scrypt",
 	[ALGO_AURUM]		= "aurum",
 	[ALGO_SHA256D]		= "sha256d",
@@ -133,7 +129,7 @@ static int opt_retries = -1;
 static int opt_fail_pause = 30;
 int opt_timeout = 0;
 static int opt_scantime = 5;
-static enum algos opt_algo = ALGO_YESCRYPT;
+static enum algos opt_algo = ALGO_AURUM;
 static int opt_scrypt_n = 1024;
 static int opt_n_threads;
 static int num_processors;
@@ -176,8 +172,6 @@ Usage: " PROGRAM_NAME " [OPTIONS]\n\
 Options:\n\
   -a, --algo=ALGO       specify the algorithm to use\n\
                           aurum     BITNET\n\
-                          yescrypt  yescrypt (default)\n\
-                          yespower  yespower 0.5\n\
                           scrypt    scrypt(1024, 1, 1)\n\
                           scrypt:N  scrypt(N, 1, 1)\n\
                           sha256d   SHA-256d\n\
@@ -1106,8 +1100,10 @@ static void stratum_gen_work(struct stratum_ctx *sctx, struct work *work)
 		free(xnonce2str);
 	}
 
-	if (opt_algo == ALGO_SCRYPT || opt_algo == ALGO_YESCRYPT || opt_algo == ALGO_YESPOWER || ALGO_AURUM)
+	if (opt_algo == ALGO_SCRYPT)
 		diff_to_target(work->target, sctx->job.diff / 65536.0);
+        else if (opt_algo == ALGO_AURUM)
+                diff_to_target(work->target, sctx->job.diff / 4096.0);
 	else
 		diff_to_target(work->target, sctx->job.diff);
 }
@@ -1200,13 +1196,7 @@ static void *miner_thread(void *userdata)
 		max64 *= thr_hashrates[thr_id];
 		if (max64 <= 0) {
 			switch (opt_algo) {
-                        case ALGO_YESCRYPT:
-				max64 = 0x000fff;
-				break;
                         case ALGO_AURUM:
-				max64 = 0x000fff;
-				break;
-                        case ALGO_YESPOWER:
 				max64 = 0x000fff;
 				break;
 			case ALGO_SCRYPT:
@@ -1227,18 +1217,8 @@ static void *miner_thread(void *userdata)
 
 		/* scan nonces for a proof-of-work hash */
 		switch (opt_algo) {
-		case ALGO_YESCRYPT:
-			rc = scanhash_yescrypt(thr_id, work.data, work.target,
-					       max_nonce, &hashes_done);
-			break;
-
 		case ALGO_AURUM:
 			rc = scanhash_aurum(thr_id, work.data, work.target,
-					       max_nonce, &hashes_done);
-			break;
-
-		case ALGO_YESPOWER:
-			rc = scanhash_yespower(thr_id, work.data, work.target,
 					       max_nonce, &hashes_done);
 			break;
 

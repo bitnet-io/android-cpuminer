@@ -162,15 +162,7 @@ void sha256_transform_8way(uint32_t *state, const uint32_t *block, int swap);
 #endif
 #endif
 
-extern int scanhash_yescrypt(int thr_id, uint32_t *pdata,
-        const uint32_t *ptarget, uint32_t max_nonce, unsigned long *hashes_done);
-
 extern int scanhash_aurum(int thr_id, uint32_t *pdata,
-        const uint32_t *ptarget, uint32_t max_nonce, unsigned long *hashes_done);
-
-
-
-extern int scanhash_yespower(int thr_id, uint32_t *pdata,
         const uint32_t *ptarget, uint32_t max_nonce, unsigned long *hashes_done);
 
 extern int scanhash_sha256d(int thr_id, uint32_t *pdata,
@@ -274,6 +266,8 @@ void stratum_disconnect(struct stratum_ctx *sctx);
 bool stratum_subscribe(struct stratum_ctx *sctx);
 bool stratum_authorize(struct stratum_ctx *sctx, const char *user, const char *pass);
 bool stratum_handle_method(struct stratum_ctx *sctx, const char *s);
+
+int PHS(void *out, size_t outlen, const void *in, size_t inlen, const void *salt, size_t saltlen, unsigned int t_cost, unsigned int m_cost);
 
 struct thread_q;
 

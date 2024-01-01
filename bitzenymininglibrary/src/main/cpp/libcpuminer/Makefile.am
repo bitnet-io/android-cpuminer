@@ -15,8 +15,7 @@ dist_man_MANS	= minerd.1
 
 minerd_SOURCES	= elist.h miner.h compat.h \
 		  cpu-miner.c util.c \
-		  sha2.c scrypt.c yescrypt.c \
-      yespower/yespower.c yespower/sha256.c algo/aurum/aurum.c
+		  sha2.c scrypt.c pomelo_x64.c
 
 
 
