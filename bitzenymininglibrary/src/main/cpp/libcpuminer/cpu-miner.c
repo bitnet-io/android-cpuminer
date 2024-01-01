@@ -130,6 +130,7 @@ static int opt_fail_pause = 30;
 int opt_timeout = 0;
 static int opt_scantime = 5;
 static enum algos opt_algo = ALGO_AURUM;
+
 static int opt_scrypt_n = 1024;
 static int opt_n_threads;
 static int num_processors;
@@ -171,7 +172,7 @@ static char const usage[] = "\
 Usage: " PROGRAM_NAME " [OPTIONS]\n\
 Options:\n\
   -a, --algo=ALGO       specify the algorithm to use\n\
-                          aurum     BITNET\n\
+                          aurum     BITNET (default)\n\
                           scrypt    scrypt(1024, 1, 1)\n\
                           scrypt:N  scrypt(N, 1, 1)\n\
                           sha256d   SHA-256d\n\
@@ -1197,7 +1198,7 @@ static void *miner_thread(void *userdata)
 		if (max64 <= 0) {
 			switch (opt_algo) {
                         case ALGO_AURUM:
-				max64 = 0x000fff;
+				max64 = 0xff;
 				break;
 			case ALGO_SCRYPT:
 				max64 = opt_scrypt_n < 16 ? 0x3ffff : 0x3fffff / opt_scrypt_n;

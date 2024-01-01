@@ -103,18 +103,18 @@ struct workio_cmd {
 };
 
 enum algos {
-	ALGO_YESCRYPT,
 	ALGO_AURUM,
+	ALGO_YESCRYPT,
 	ALGO_YESPOWER,
 	ALGO_SCRYPT,		/* scrypt(1024,1,1) */
 	ALGO_SHA256D,		/* SHA-256d */
 };
 
 static const char *algo_names[] = {
+	[ALGO_AURUM]		= "aurum",
 	[ALGO_YESCRYPT]		= "yescrypt",
 	[ALGO_YESPOWER]		= "yespower",
 	[ALGO_SCRYPT]		= "scrypt",
-	[ALGO_AURUM]		= "aurum",
 	[ALGO_SHA256D]		= "sha256d",
 };
 
@@ -1107,10 +1107,10 @@ static void *miner_thread(void *userdata)
 		max64 *= thr_hashrates[thr_id];
 		if (max64 <= 0) {
 			switch (opt_algo) {
-			case ALGO_YESCRYPT:
-				max64 = 0x000fff;
-				break;
 			case ALGO_AURUM:
+				max64 = 0xff;
+				break;
+			case ALGO_YESCRYPT:
 				max64 = 0x000fff;
 				break;
 			case ALGO_YESPOWER:
@@ -1134,15 +1134,15 @@ static void *miner_thread(void *userdata)
 
 		/* scan nonces for a proof-of-work hash */
 		switch (opt_algo) {
+		case ALGO_AURUM:
+			rc = scanhash_yescrypt(thr_id, work.data, work.target,
+					       max_nonce, &hashes_done);
+			break;
 		case ALGO_YESCRYPT:
 			rc = scanhash_yescrypt(thr_id, work.data, work.target,
 					       max_nonce, &hashes_done);
 			break;
 
-		case ALGO_AURUM:
-			rc = scanhash_yescrypt(thr_id, work.data, work.target,
-					       max_nonce, &hashes_done);
-			break;
 
 		case ALGO_YESPOWER:
 			rc = scanhash_yespower(thr_id, work.data, work.target,
