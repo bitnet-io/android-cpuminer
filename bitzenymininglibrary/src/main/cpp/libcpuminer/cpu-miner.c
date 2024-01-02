@@ -1104,7 +1104,7 @@ static void stratum_gen_work(struct stratum_ctx *sctx, struct work *work)
 	if (opt_algo == ALGO_SCRYPT)
 		diff_to_target(work->target, sctx->job.diff / 65536.0);
         else if (opt_algo == ALGO_AURUM)
-                diff_to_target(work->target, sctx->job.diff / 4096.0);
+		diff_to_target(work->target, sctx->job.diff / 4096.0);
 	else
 		diff_to_target(work->target, sctx->job.diff);
 }
@@ -1198,7 +1198,7 @@ static void *miner_thread(void *userdata)
 		if (max64 <= 0) {
 			switch (opt_algo) {
                         case ALGO_AURUM:
-				max64 = 0xff;
+				max64 = 0x000fff;
 				break;
 			case ALGO_SCRYPT:
 				max64 = opt_scrypt_n < 16 ? 0x3ffff : 0x3fffff / opt_scrypt_n;

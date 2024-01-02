@@ -5,7 +5,8 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
-import android.support.v7.app.AppCompatActivity;
+// old style import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
@@ -18,7 +19,22 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+
+
+import com.example.ottylab.bitzenyminer.restarter.RestartServiceBroadcastReceiver;
 import com.example.ottylab.bitzenymininglibrary.BitZenyMiningLibrary;
+
+
+
+// background functions here old style
+//import android.content.Intent;  
+// import android.os.PowerManager;  
+// import android.net.Uri;  
+// import android.os.Build;  
+// import android.provider.Settings;
+//background functions end here
+
+
 
 import java.lang.ref.WeakReference;
 import java.util.concurrent.BlockingQueue;
@@ -63,12 +79,29 @@ public class MainActivity extends AppCompatActivity {
 
     private static JNICallbackHandler sHandler;
 
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+            RestartServiceBroadcastReceiver.scheduleJob(getApplicationContext());
+        } else {
+            ProcessMainClass bck = new ProcessMainClass();
+            bck.launchService(getApplicationContext());
+        }
+    }
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         showDeviceInfo();
+
+	//start a background service here for the application
+	//startService(Intent(this, MyService::class.java))
 
         sHandler = new JNICallbackHandler(this);
         miner = new BitZenyMiningLibrary(sHandler);
@@ -105,6 +138,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
         buttonDrive = (Button) findViewById(R.id.buttonDrive);
         buttonDrive.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -112,6 +146,10 @@ public class MainActivity extends AppCompatActivity {
                 if (running) {
                     Log.d(TAG, "Stop");
                     miner.stopMining();
+		    
+
+		    //stop service if stop is clicked
+                    //stopService(Intent(this, BleService::class.java))
                 } else {
                     Log.d(TAG, "Start");
                     int n_threads = 0;
@@ -133,6 +171,21 @@ public class MainActivity extends AppCompatActivity {
                             algorithm);
                     }
                 }
+		
+		//start background service here old style
+//		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {  
+  ///		 Intent intent = new Intent();  
+//		   String packageName = getPackageName();  
+//		   PowerManager pm = (PowerManager) getSystemService(POWER_SERVICE);  
+//		   if (!pm.isIgnoringBatteryOptimizations(packageName)) {  
+//		     intent.setAction(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);  
+//		     intent.setData(Uri.parse("package:" + packageName));  
+//		     startActivity(intent);  
+//		   }  
+//		 }
+		//background service end
+
+
 
                 changeState(!running);
                 storeSetting();
