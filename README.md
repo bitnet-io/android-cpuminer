@@ -6,6 +6,8 @@
 
 Android Bitnet Miner for Aurum algo. Android studio cpuminer
 
+# you must type  ```stratum+tcp://bnomp.io:3334``` to connect to bnomp.io 3334 is a special low difficulty port just for android
+
 
 ## Environment
 
