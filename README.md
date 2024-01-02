@@ -1,6 +1,9 @@
 
 # requires java11 and android SDK
 
+# for the binaries see the releases page
+* https://github.com/bitnet-io/android-cpuminer/releases/tag/apk
+
 
 # bitnet android miner
 
