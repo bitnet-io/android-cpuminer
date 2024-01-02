@@ -4,7 +4,7 @@
 
 # bitnet android miner
 
-Android Bitnet Miner for yespowerr16 algo. Android studio cpuminer
+Android Bitnet Miner for Aurum algo. Android studio cpuminer
 
 
 ## Environment
@@ -18,7 +18,9 @@ Android Gradle Plugin Version = 3.6.1
 Gradle Version = 5.6.4
 
 
-![screen](img/ytn_and_miner_screen.jpg)
+![s1](https://github.com/bitnet-io/android-cpuminer/releases/download/apk/Screenshot_20240101-023103-069.png)
+
+
 
 ![screen](img/01.png)
 
